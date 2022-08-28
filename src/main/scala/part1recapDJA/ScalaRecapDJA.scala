@@ -1,6 +1,7 @@
 package part1recapDJA
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 object ScalaRecapDJA extends App {
 
@@ -19,7 +20,7 @@ object ScalaRecapDJA extends App {
   // OOP
 
   class Animal
-  class Dog extends Animal
+  class Cat extends Animal
   trait Carnivore {
     def eat(animal: Animal): Unit
   }
@@ -69,8 +70,9 @@ object ScalaRecapDJA extends App {
     case _ => "something else"
   }
 
-  // Future
-  import scala.concurrent.ExecutionContext.Implicits.global
+  // Future abstract away computations
+
+  import scala.concurrent.ExecutionContext.Implicits.global // <- runs concurrent threads
 
   val aFuture = Future {
     // some expensive computation, runs on another thread
@@ -78,8 +80,44 @@ object ScalaRecapDJA extends App {
   }
 
   aFuture.onComplete {
-    case Success(meaningOfLife)
+    case Success(meaningOfLife) => println(s"I've found the meaning of life $meaningOfLife")
+    case Failure(ex) => println(s"I have failed $ex")
   }
+
+  // Partial Functions
+  val aPartialFunction = (x: Int) => x match {
+    case 1 => 43
+    case 8 => 56
+    case _ => 999
+  }
+
+  // Implicits - automatic injection by the compiler
+
+  def methodWithImplicitArgument(implicit x: Int) = x + 43
+  implicit val implicitInt = 67
+  val implicitCall = methodWithImplicitArgument
+
+  // implicit conversions - implicit defs
+
+  case class Person(name: String) {
+    def greet = println(s"Hi, my name is $name")
+  }
+
+  implicit def fromStringToPerson(name: String) = Person(name)
+  "Bob.greet" // fromStringToPerson("Bob").greet
+
+  // implicit conversion - implicit classes
+  implicit class Dog(name: String) {
+    def bark = println("Bark")
+  }
+  "Lassie".bark
+
+  /*
+  - local scope
+  - imported scope
+  - companion objects of the types involved in the method call
+   */
+
 
 
 }
