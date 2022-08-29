@@ -79,22 +79,22 @@ object DataSources extends App {
     StructField("price", DoubleType)
   ))
 
-  spark.read
-    .format("CSV")
-    .schema(stocksSchema)
-    .option("dateFormat", "MMM dd YYYY")
-    .option("header", "true")
-    .option("sep", ",")
-    .option("nullValue", "")
-    .csv("src/main/resources/data/stocks.csv")
+//  spark.read
+//    .format("CSV")
+//    .schema(stocksSchema)
+//    .option("dateFormat", "MMM dd YYYY")
+//    .option("header", "true")
+//    .option("sep", ",")
+//    .option("nullValue", "")
+//    .csv("src/main/resources/data/stocks.csv")
 
   // Parquet
-  carsDF.write
-    .mode(SaveMode.Overwrite)
-    .save("src/main/resources/data/cars.parquet")
-
-  // Text files
-  spark.read.text("src/main/resources/data/sample_text.txt").show()
+//  carsDF.write
+//    .mode(SaveMode.Overwrite)
+//    .save("src/main/resources/data/cars.parquet")
+//
+//  // Text files
+//  spark.read.text("src/main/resources/data/sample_text.txt").show()
 
   // Reading from a remote DB
 
@@ -110,18 +110,46 @@ object DataSources extends App {
 //  employeesDF.show()
 
   // Reading from a remote DB
-  val driver = "org.postgresql.Driver"
-  val url = "jdbc:postgresql://localhost:5432/rtjvm"
-  val user = "docker"
-  val password = "docker"
+//  val driver = "org.postgresql.Driver"
+//  val url = "jdbc:postgresql://localhost:5432/rtjvm"
+//  val user = "docker"
+//  val password = "docker"
+//
+//  val employeesDF = spark.read
+//    .format("jdbc")
+//    .option("driver", driver)
+//    .option("url", url)
+//    .option("user", user)
+//    .option("password", password)
+//    .option("dbtable", "public.employees")
+//    .load()
 
-  val employeesDF = spark.read
-    .format("jdbc")
-    .option("driver", driver)
-    .option("url", url)
-    .option("user", user)
-    .option("password", password)
-    .option("dbtable", "public.employees")
-    .load()
+  // read the movies DF
+
+  val moviesDF = spark.read.json("src/main/resources/data/movies.json")
+
+  moviesDF.show()
+
+//  // TSV
+//  moviesDF.write
+//    .format("csv")
+//    .option("header", "true")
+//    .option("sep", "\t")
+//    .save("src/main/resources/data/movies.csv")
+//
+//  // Parquet
+//  moviesDF.write.save("src/main/resources/data/movies.parquet")
+
+  // save to DF
+//  moviesDF.write
+//    .format("jdbc")
+//    .option("driver", driver)
+//    .option("url", url)
+//    .option("user", user)
+//    .option("password", password)
+//    .option("dbtable", "public.movies")
+//    .save()
+
+
 
 }
