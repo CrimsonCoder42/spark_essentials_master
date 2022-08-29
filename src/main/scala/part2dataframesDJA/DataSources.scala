@@ -98,7 +98,30 @@ object DataSources extends App {
 
   // Reading from a remote DB
 
+//  val employeesDF= spark.read
+//    .format("jdbc")
+//    .option("driver", "org.postgresql.Driver")
+//    .option("url", "jdbc:postgresql://localhost:5432/rtjvm")
+//    .option("user", "docker")
+//    .option("password", "docker")
+//    .option("dbtable", "public.employees")
+//    .load()
+//
+//  employeesDF.show()
 
+  // Reading from a remote DB
+  val driver = "org.postgresql.Driver"
+  val url = "jdbc:postgresql://localhost:5432/rtjvm"
+  val user = "docker"
+  val password = "docker"
 
+  val employeesDF = spark.read
+    .format("jdbc")
+    .option("driver", driver)
+    .option("url", url)
+    .option("user", user)
+    .option("password", password)
+    .option("dbtable", "public.employees")
+    .load()
 
 }
