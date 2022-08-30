@@ -22,12 +22,12 @@ object CandEChallenges extends App {
 
   val moviesReleaseDF = moviesDF.select("Title", "Release Date")
 
-  val moviesReleaseDF2 = moviesDF.select(
-    moviesDF.col("Title"),
-    col("Release_Date"),
-    $"Major_Genre",
-    expr("IMBD_Rating")
-  )
+//  val moviesReleaseDF2 = moviesDF.select(
+//    moviesDF.col("Title"),
+//    col("Release_Date"),
+//    $"Major_Genre",
+//    expr("IMBD_Rating")
+//  )
 
 
   // 2.
