@@ -20,15 +20,15 @@ object ColumnsAndExpressions extends App {
   // Columns
   val firstColumn = carsDF.col("Name")
 
-  // selecting
-  val carNamesDF = carsDF.select(firstColumn)
+  // selecting (projecting)
+  val carNamesDF = carsDF.select(firstColumn) //<- select method
 
   // various select methods
   import spark.implicits._
   carsDF.select(
     carsDF.col("Name"),
     col("Acceleration"),
-    column("Weight_in_lbs"),
+    column("Weight_in_lbs"), // <- column is more explicit
     'Year, // Scala Symbol, auto-converted to column
     $"Horsepower", // fancier interpolated string, returns a Column object
   )
@@ -73,5 +73,34 @@ object ColumnsAndExpressions extends App {
   val europeanCarsDF2 = carsDF.where(col("Origin") =!= "USA")
 
   //filtering with expression strings
+  val americanCarsDF = carsDF.filter("Origin = 'USA'")
+
+  // Chain filters
+  val americanPowerfulCarsDF = carsDF.filter(col("Origin") === "USA").filter(col("Horsepower") > 150)
+  val americanPowerfulCarsDF2 = carsDF.filter(col("Origin") === "USA" and col("Horsepower") > 150)
+  val americanPowerfulCarsDF3 = carsDF.filter("Origin = 'USA' and Horsepower")
+
+  // unioning = adding more rows
+  val moreCarsDF = spark.read.option("inferSchema", "true").json("src/main/resources/data/more_cars.json")
+  val allCarsDF = carsDF.union(moreCarsDF) // works if the DFs have the same schema
+
+  // distinct values
+  val allCountriesDF = carsDF.select("Origin"). distinct()
+  allCountriesDF.show()
+
+
+  println("-" * 50)
+
+  // 1. Read the movies DF and select 2 columns of your choice
+
+  val moviesDF = spark.read.option("inferSchems", "true").json("src/main/resources/data/movies.json")
+  moviesDF.show()
+
+  val moviesReleaseDF2 = moviesDF.select(
+    moviesDF.col("Title"),
+    col("Release_Date"),
+    $"Major_Genre",
+    expr("IMDB_Rating")
+  )
 
 }
