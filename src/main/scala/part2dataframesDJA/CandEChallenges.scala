@@ -16,11 +16,11 @@ object CandEChallenges extends App {
   // show movies
 
   val moviesDF = spark.read.option("inferSchems", "true").json("src/main/resources/data/movies.json")
-  moviesDF.show()
+  //moviesDF.show()
 
   // 1. Read the movies DF and select 2 columns of your choice
 
-  val moviesReleaseDF = moviesDF.select("Title", "Release Date")
+  //val moviesReleaseDF = moviesDF.select("Title", "Release Date")
 
 //  val moviesReleaseDF2 = moviesDF.select(
 //    moviesDF.col("Title"),
@@ -30,5 +30,38 @@ object CandEChallenges extends App {
 //  )
 
 
-  // 2.
+  // 2.Create another column summing up the total profit of the movies = US_Gross + Worldwide_Gross + DVD sales
+
+  val moviesProfitDF = moviesDF.select(
+    col("Title"),
+    col("US_Gross"),
+    col("Worldwide_Gross"),
+    col("US_DVD_Sales"),
+    (col("US_Gross") + col("Worldwide_Gross")).as("Total_Gross")
+  )
+
+  val moviesProfitDF2 = moviesDF.selectExpr(
+    "Title",
+    "US_Gross",
+    "Worldwide_Gross",
+    "US_Gross + Worldwide_Gross"
+  )
+
+  // 3. Select all COMEDY movies with IMDB rating above 6
+
+  val atLeastMediocreComediesDF = moviesDF.select("Title", "IMDB_Rating")
+    .where(col("Major_Genre") === "Comedy" and col("IMDB_Rating") > 6)
+
+  val comediesDF2 = moviesDF.select("Title", "IMDB_Rating")
+    .where(col("Major_Genre") === "Comedy")
+    .where(col("IMDB_Rating") > 6)
+
+  val comediesDF3 = moviesDF.select("Title", "IMDB_Rating")
+    .where("Major_Genre = 'Comedy' and IMDB_Rating > 6")
+
+  comediesDF3.show()
+
+
+
+
 }
