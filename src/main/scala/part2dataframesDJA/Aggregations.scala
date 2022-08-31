@@ -19,9 +19,7 @@ object Aggregations extends App {
   val generesCountDF = moviesDF.select(count(col("Major_Genre"))) // all the values except null
   moviesDF.selectExpr("count(Major_Genre)")
 
-
   // counting all
-
   moviesDF.select(count("*")) // count all the rows, and will INCLUDE nulls
 
   // counting distinct
@@ -47,7 +45,7 @@ object Aggregations extends App {
   // data science
   moviesDF.select(
     mean(col("Rotten_Tomatoes_Rating")),
-    stddev(col("Rotten_Tomatoes_Rating"))
+    stddev(col("Rotten_Tomatoes_Rating")) // standard deviation In statistics, the standard deviation is a measure of the amount of variation or dispersion of a set of values. A low standard deviation indicates that the values tend to be close to the mean of the set, while a high standard deviation indicates that the values are spread out over a wider range.
   )
 
   // Grouping
